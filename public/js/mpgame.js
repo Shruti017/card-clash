@@ -100,8 +100,9 @@
     });
 
     // Center
-    document.getElementById("mpDiscard").innerHTML = C.renderCardHTML(state.current, {});
-    const dp = document.getElementById("mpDiscard").firstChild; if (dp) dp.classList.add("pop");
+    const mpDiscard = document.getElementById("mpDiscard");
+    mpDiscard.innerHTML = C.renderCardHTML(state.current, {});
+    const dp = mpDiscard.querySelector(".card, .card-back"); if (dp) dp.classList.add("pop");
     document.getElementById("mpDrawPile").innerHTML = C.renderCardBackHTML();
 
     // Local hand

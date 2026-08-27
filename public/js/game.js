@@ -364,9 +364,9 @@
 
   function renderCenter() {
     const top = currentCard();
-    document.getElementById("discardPile").innerHTML =
-      C.renderCardHTML(top, {}) + "";
-    const dp = document.getElementById("discardPile").firstChild;
+    const dpEl = document.getElementById("discardPile");
+    dpEl.innerHTML = C.renderCardHTML(top, {});
+    const dp = dpEl.querySelector(".card, .card-back");
     if (dp) dp.classList.add("pop");
     document.getElementById("drawPile").innerHTML = C.renderCardBackHTML();
   }
