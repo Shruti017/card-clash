@@ -1,0 +1,28 @@
+name: Deploy to Vercel
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Deploys the static front-end (public/) defined in vercel.json.
+      # Bot mode + all pages go live automatically on every push to main.
+      # Requires these secrets in GitHub repo settings > Secrets:
+      #   VERCEL_TOKEN     – from https://vercel.com/account/tokens
+      #   VERCEL_ORG_ID    – from `vercel env pull` / project settings
+      #   VERCEL_PROJECT_ID– from project settings
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: ./
+          vercel-args: "--prod"
