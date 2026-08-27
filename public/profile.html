@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Card Clash - Profile</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/menu.css" />
+</head>
+<body class="menu-body">
+  <div class="menu-bg"></div>
+  <header class="menu-header"><h1 class="logo">PRO<span>FILE</span></h1></header>
+  <main class="menu-main" style="width:420px;">
+    <button class="btn secondary" onclick="location.href='index.html'">← Back to Menu</button>
+    <input id="nameInput" class="text-input" placeholder="Enter username" style="margin-top:10px;" />
+    <button class="btn" id="loadBtn" style="margin-top:10px;">LOAD PROFILE</button>
+    <div id="profileBox" class="config-panel hidden" style="width:100%;"></div>
+  </main>
+  <script>
+    const box = document.getElementById("profileBox");
+    document.getElementById("loadBtn").addEventListener("click", load);
+    async function load() {
+      const name = (document.getElementById("nameInput").value || "").trim();
+      if (!name) return;
+      box.classList.remove("hidden");
+      box.innerHTML = "Loading…";
+      // Create/get the user, then load profile + analytics.
+      await fetch("/api/user", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: name })
+      }).catch(() => {});
+      try {
+        const [prof, anal] = await Promise.all([
+          fetch("/api/profile/" + encodeURIComponent(name)).then(r => r.json()),
+          fetch("/api/analytics/" + encodeURIComponent(name)).then(r => r.json())
+        ]);
+        if (prof.error) { box.innerHTML = "<p>" + prof.error + "</p>"; return; }
+        const winRate = prof.gamesPlayed ? Math.round((prof.gamesWon / prof.gamesPlayed) * 1000) / 10 : 0;
+        box.innerHTML =
+          "<h2>" + prof.avatar + " " + prof.username + "</h2>" +
+          row("Games Played", prof.gamesPlayed) +
+          row("Wins", prof.gamesWon) +
+          row("Losses", prof.gamesLost) +
+          row("Win Rate", winRate + "%") +
+          row("Best Score", prof.bestScore) +
+          row("Win Streak", prof.currentStreak) +
+          "<h3 style='color:#ffe07a;margin-top:14px;'>💡 Insight</h3>" +
+          "<p class='hint'>" + (anal.advice || "Play more games!") + "</p>";
+      } catch (e) {
+        box.innerHTML = "<p>Could not load profile (MongoDB may be off).</p>";
+      }
+    }
+    function row(k, v) { return "<div class='prow'><span>" + k + "</span><b>" + v + "</b></div>"; }
+  </script>
+  <style>
+    .prow { display:flex; justify-content:space-between; padding:6px 4px; border-bottom:1px solid rgba(255,255,255,0.08); }
+    .lb-list { list-style:none; padding:0; width:100%; }
+    .lb-item { display:flex; gap:10px; align-items:center; background:rgba(16,42,28,0.95);
+      border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:10px 14px; margin-bottom:8px; font-weight:700; }
+    .lb-item .rank { color:#ffe07a; width:24px; }
+    .lb-item .nm { flex:1; }
+    .lb-item .sc { color:#9be8b0; }
+  </style>
+</body>
+</html>

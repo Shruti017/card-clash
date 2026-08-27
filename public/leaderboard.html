@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Card Clash - Leaderboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/menu.css" />
+</head>
+<body class="menu-body">
+  <div class="menu-bg"></div>
+  <header class="menu-header"><h1 class="logo">LEADER<span>BOARD</span></h1></header>
+  <main class="menu-main" style="width:420px;">
+    <button class="btn secondary" onclick="location.href='index.html'">← Back to Menu</button>
+    <ol id="lbList" class="lb-list"></ol>
+    <p id="lbMsg" class="hint">Loading…</p>
+  </main>
+  <script>
+    fetch("/api/leaderboard").then(r => r.json()).then(data => {
+      const list = document.getElementById("lbList");
+      const msg = document.getElementById("lbMsg");
+      if (!Array.isArray(data) || data.length === 0) {
+        msg.textContent = "No scores yet. Start a game with MongoDB enabled to record stats!";
+        return;
+      }
+      msg.style.display = "none";
+      data.forEach((u, i) => {
+        const li = document.createElement("li");
+        li.className = "lb-item";
+        li.innerHTML = "<span class='rank'>" + (i + 1) + ".</span> " +
+          "<span class='nm'>" + u.avatar + " " + u.username + "</span>" +
+          "<span class='sc'>" + u.totalScore + "</span>";
+        list.appendChild(li);
+      });
+    }).catch(() => {
+      document.getElementById("lbMsg").textContent = "Could not load leaderboard (MongoDB may be off).";
+    });
+  </script>
+</body>
+</html>

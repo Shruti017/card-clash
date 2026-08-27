@@ -1,0 +1,4 @@
+/* Shared base styles */
+body { margin: 0; font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+a { text-decoration: none; color: inherit; }
+.hidden { display: none !important; }

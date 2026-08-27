@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Card Clash</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/menu.css" />
+</head>
+<body class="menu-body">
+  <div class="menu-bg"></div>
+
+  <header class="menu-header">
+    <h1 class="logo">CARD<span>CLASH</span></h1>
+    <p class="tagline">An original UNO-inspired card game</p>
+  </header>
+
+  <main class="menu-main">
+    <button class="big-btn bot-btn" id="openBot">
+      <span class="big-ico">🤖</span>
+      <span>PLAY WITH BOTS</span>
+    </button>
+
+    <button class="big-btn net-btn" id="openNet">
+      <span class="big-ico">🌐</span>
+      <span>ONLINE MULTIPLAYER</span>
+    </button>
+
+    <nav class="menu-nav">
+      <a class="nav-link" href="leaderboard.html">🏆 Leaderboard</a>
+      <a class="nav-link" href="profile.html">👤 Profile</a>
+      <a class="nav-link" href="history.html">📜 History</a>
+    </nav>
+
+    <!-- Bot setup panel -->
+    <section class="config-panel" id="botPanel" style="display:none;">
+      <h2>Bot Match Setup</h2>
+
+      <div class="config-group">
+        <label>Number of Bots</label>
+        <div class="choice-row" data-group="bots">
+          <button class="choice" data-value="2">2 Bots</button>
+          <button class="choice" data-value="3">3 Bots</button>
+        </div>
+      </div>
+
+      <div class="config-group">
+        <label>Difficulty</label>
+        <div class="choice-row" data-group="diff">
+          <button class="choice" data-value="easy">Easy</button>
+          <button class="choice" data-value="normal">Normal</button>
+          <button class="choice" data-value="hard">Hard</button>
+        </div>
+      </div>
+
+      <div class="config-actions">
+        <button class="btn secondary" id="botCancel">Back</button>
+        <button class="btn" id="botStart">START ▶</button>
+      </div>
+    </section>
+
+    <!-- Multiplayer panel -->
+    <section class="config-panel" id="netPanel" style="display:none;">
+      <h2>Online Multiplayer</h2>
+      <p class="hint">Create a room, share the code, and play with friends in real time.</p>
+      <div class="config-actions">
+        <button class="btn secondary" id="netCancel">Back</button>
+        <button class="btn" id="netGo">CONTINUE ▶</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="menu-footer">v1.0 · No login required for Bot Mode</footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

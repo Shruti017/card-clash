@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+
+# Local environment / secrets
+.env
+
+# Logs
+*.log
+server.log
+server.err
+
+# OS / editor files
+.DS_Store
+Thumbs.db
+.vercel

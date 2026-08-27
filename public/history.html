@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Card Clash - History</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/menu.css" />
+</head>
+<body class="menu-body">
+  <div class="menu-bg"></div>
+  <header class="menu-header"><h1 class="logo">HIS<span>TORY</span></h1></header>
+  <main class="menu-main" style="width:460px;">
+    <button class="btn secondary" onclick="location.href='index.html'">← Back to Menu</button>
+    <div id="histBox" class="config-panel hidden" style="width:100%;"></div>
+    <p id="histMsg" class="hint">Loading…</p>
+  </main>
+  <script>
+    const box = document.getElementById("histBox");
+    const msg = document.getElementById("histMsg");
+    fetch("/api/history").then(r => r.json()).then(data => {
+      if (!Array.isArray(data) || data.length === 0) {
+        msg.textContent = "No game history yet. Play online with MongoDB enabled to record games!";
+        return;
+      }
+      msg.style.display = "none";
+      box.classList.remove("hidden");
+      data.forEach(g => {
+        const div = document.createElement("div");
+        div.className = "hist-item";
+        const names = g.players.map(p => p.name).join(" vs ");
+        const date = new Date(g.createdAt).toLocaleDateString();
+        div.innerHTML = "<div class='hn'>" + names + "</div>" +
+          "<div class='hm'>Winner: <b>" + g.winner + "</b> · Mode: " + g.gameMode +
+          " · " + date + "</div>";
+        box.appendChild(div);
+      });
+    }).catch(() => { msg.textContent = "Could not load history (MongoDB may be off)."; });
+  </script>
+  <style>
+    .hist-item { background:rgba(16,42,28,0.95); border:1px solid rgba(255,255,255,0.1);
+      border-radius:10px; padding:10px 14px; margin-bottom:8px; }
+    .hn { font-weight:700; }
+    .hm { font-size:12px; opacity:0.8; margin-top:4px; }
+  </style>
+</body>
+</html>

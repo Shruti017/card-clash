@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "name": "card-clash",
+  "buildCommand": "echo 'static site - no build step'",
+  "outputDirectory": "public",
+  "routes": [
+    { "src": "/(.*)", "dest": "/$1" }
+  ]
+}

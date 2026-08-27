@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Card Clash - Multiplayer</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/game.css" />
+  <link rel="stylesheet" href="css/lobby.css" />
+</head>
+<body>
+  <div class="table-wrap" id="lobbyView">
+    <div class="topbar">
+      <div class="title">🂡 CARD CLASH · MULTIPLAYER</div>
+      <button class="btn secondary" onclick="location.href='index.html'">☰ Menu</button>
+    </div>
+
+    <div class="lobby-main">
+      <h2>Play with Friends</h2>
+      <input id="nameInput" class="text-input" placeholder="Your name" maxlength="12" />
+
+      <div class="lobby-cols">
+        <section class="lobby-card">
+          <h3>Create Room</h3>
+          <p class="hint">You are the host. Add bots to fill the table.</p>
+          <label>Bots to add (0-2)</label>
+          <div class="choice-row" id="botRow">
+            <button class="choice selected" data-value="0">0</button>
+            <button class="choice" data-value="1">1</button>
+            <button class="choice" data-value="2">2</button>
+          </div>
+          <button class="btn" id="createBtn" style="margin-top:12px;">CREATE ROOM</button>
+        </section>
+
+        <section class="lobby-card">
+          <h3>Join Room</h3>
+          <p class="hint">Enter the 6-character code from your friend.</p>
+          <input id="codeInput" class="text-input" placeholder="ROOM CODE" maxlength="6" />
+          <button class="btn" id="joinBtn" style="margin-top:12px;">JOIN ROOM</button>
+        </section>
+      </div>
+
+      <div id="roomPanel" class="room-panel hidden">
+        <div class="room-code">CODE: <span id="roomCode">------</span>
+          <button class="btn secondary" id="copyBtn" style="margin-left:10px;">Copy</button>
+        </div>
+        <div id="playerList" class="player-list"></div>
+        <div id="startRow" class="start-row hidden">
+          <button class="btn" id="startBtn">START GAME ▶</button>
+        </div>
+        <p id="waitMsg" class="hint">Waiting for host to start…</p>
+      </div>
+
+      <div id="errorBox" class="error-box hidden"></div>
+    </div>
+  </div>
+
+  <!-- ============ MULTIPLAYER GAME VIEW (same layout as bot) ============ -->
+  <div class="table-wrap" id="mpView" style="display:none;">
+    <div class="topbar">
+      <div class="title">🂡 CARD CLASH</div>
+      <div class="controls">
+        <button class="btn secondary" id="mpSoundBtn">🔊 Sound</button>
+        <button class="btn secondary" id="mpMenuBtn">☰ Menu</button>
+      </div>
+    </div>
+    <div class="table">
+      <div class="turn-banner" id="mpBanner">Connecting…</div>
+      <div class="seat" id="seat-top" style="display:none"></div>
+      <div class="seat" id="seat-left" style="display:none"></div>
+      <div class="seat" id="seat-right" style="display:none"></div>
+      <div class="center-area">
+        <div class="pile"><div class="pile-label">DRAW</div><div class="draw-pile" id="mpDrawPile"></div></div>
+        <div class="pile"><div class="pile-label">DISCARD</div><div class="discard-slot" id="mpDiscard"></div></div>
+      </div>
+      <div class="hand-area">
+        <div class="hand" id="mpHand"></div>
+        <button class="btn draw-btn" id="mpDrawBtn" style="margin-left:18px;">DRAW CARD</button>
+      </div>
+    </div>
+
+    <div class="overlay" id="mpColorOverlay">
+      <div class="color-picker">
+        <h3>CHOOSE COLOR</h3>
+        <div class="color-grid">
+          <div class="color-btn red" data-color="red"></div>
+          <div class="color-btn blue" data-color="blue"></div>
+          <div class="color-btn green" data-color="green"></div>
+          <div class="color-btn yellow" data-color="yellow"></div>
+        </div>
+      </div>
+    </div>
+    <div class="overlay" id="mpWinOverlay">
+      <div class="modal">
+        <h2 id="mpWinTitle">🏆 YOU WIN!</h2>
+        <p id="mpWinSub"></p>
+        <p id="mpWinScore"></p>
+        <div class="row">
+          <button class="btn" id="mpAgainBtn">PLAY AGAIN</button>
+          <button class="btn secondary" id="mpWinMenu">MAIN MENU</button>
+        </div>
+      </div>
+    </div>
+    <div class="toast" id="mpToast">⚠ ONE CARD!</div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="js/cards.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/socket.js"></script>
+  <script src="js/mpgame.js"></script>
+  <script src="js/lobby.js"></script>
+</body>
+</html>

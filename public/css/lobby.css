@@ -1,0 +1,36 @@
+/* =========================================================
+   lobby.css - multiplayer lobby styling
+   ========================================================= */
+.lobby-main {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  padding: 20px; gap: 16px;
+}
+.lobby-main h2 { color: #ffe07a; margin: 4px 0; }
+.lobby-main .hint { font-size: 13px; opacity: 0.75; text-align: center; }
+.text-input {
+  padding: 12px 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2);
+  background: #0f2a1c; color: #fff; font-size: 15px; width: 240px; text-align: center;
+}
+.lobby-cols { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+.lobby-card {
+  background: rgba(16,42,28,0.95); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px; padding: 18px; width: 260px; text-align: center;
+}
+.lobby-card h3 { color: #ffe07a; margin: 0 0 6px; }
+.lobby-card label { display: block; font-size: 12px; opacity: 0.8; margin: 10px 0 6px; }
+.room-panel {
+  background: rgba(16,42,28,0.95); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px; padding: 18px; text-align: center; min-width: 320px;
+}
+.room-code { font-size: 22px; font-weight: 800; color: #ffe07a; letter-spacing: 2px; }
+.player-list { margin: 14px 0; display: flex; flex-direction: column; gap: 6px; }
+.pl-item {
+  background: #1c3a28; padding: 8px 12px; border-radius: 8px; font-weight: 600;
+}
+.start-row { margin-top: 10px; }
+.error-box {
+  background: #5a1e1e; color: #ffd9d9; padding: 10px 16px; border-radius: 8px;
+  border: 1px solid #a33; font-size: 14px;
+}
+.hidden { display: none !important; }
+@media (max-width: 560px) { .lobby-card, .room-panel { width: 92vw; } }

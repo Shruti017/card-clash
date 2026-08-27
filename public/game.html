@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Card Clash - Game</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/game.css" />
+</head>
+<body>
+  <div class="table-wrap">
+    <div class="topbar">
+      <div class="title">🂡 CARD CLASH</div>
+      <div class="controls">
+        <button class="btn secondary" id="soundBtn">🔊 Sound</button>
+        <button class="btn secondary" id="menuBtn">☰ Menu</button>
+      </div>
+    </div>
+
+    <div class="table">
+      <div class="turn-banner" id="turnBanner">Your turn</div>
+
+      <!-- Opponent seats are created dynamically by game.js -->
+      <div class="seat" id="seat-top" style="display:none"></div>
+      <div class="seat" id="seat-left" style="display:none"></div>
+      <div class="seat" id="seat-right" style="display:none"></div>
+
+      <!-- Center piles -->
+      <div class="center-area">
+        <div class="pile">
+          <div class="pile-label">DRAW</div>
+          <div class="draw-pile" id="drawPile"></div>
+        </div>
+        <div class="pile">
+          <div class="pile-label">DISCARD</div>
+          <div class="discard-slot" id="discardPile"></div>
+        </div>
+      </div>
+
+      <!-- Player hand -->
+      <div class="hand-area">
+        <div class="hand" id="hand"></div>
+        <button class="btn draw-btn" id="drawBtn" style="margin-left:18px;">DRAW CARD</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Color picker overlay -->
+  <div class="overlay" id="colorOverlay">
+    <div class="color-picker">
+      <h3>CHOOSE COLOR</h3>
+      <div class="color-grid">
+        <div class="color-btn red" data-color="red"></div>
+        <div class="color-btn blue" data-color="blue"></div>
+        <div class="color-btn green" data-color="green"></div>
+        <div class="color-btn yellow" data-color="yellow"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Win / game over modal -->
+  <div class="overlay" id="winOverlay">
+    <div class="modal">
+      <h2 id="winTitle">🏆 YOU WIN!</h2>
+      <p id="winSub">Congratulations!</p>
+      <p id="winScore">Score: 0</p>
+      <div class="row">
+        <button class="btn" id="playAgainBtn">PLAY AGAIN</button>
+        <button class="btn secondary" id="winMenuBtn">MAIN MENU</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- One-card warning toast -->
+  <div class="toast" id="toast">⚠ ONE CARD!</div>
+
+  <script src="js/cards.js"></script>
+  <script src="js/bot.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>
