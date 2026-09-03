@@ -96,6 +96,18 @@ app.get("/api/analytics/:username", async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// ---- Admin routes ----
+app.get("/api/admin/users", async (req, res) => {
+  if (!dbOK()) return res.json([]);
+  try { const u = await require("./server/models/User").find().sort({ totalScore: -1 }); res.json(u); }
+  catch (e) { res.json([]); }
+});
+app.delete("/api/admin/users/:id", async (req, res) => {
+  if (!dbOK()) return res.status(503).json({ error: "Database not available" });
+  try { await require("./server/models/User").findByIdAndDelete(req.params.id); res.json({ ok: true }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // ---- Socket.IO (online multiplayer) ----
 let io = null;
 try {

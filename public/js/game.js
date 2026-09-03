@@ -21,7 +21,9 @@
     turn: 0,
     direction: 1,    // 1 = forward, -1 = reversed
     gameOver: false,
-    pendingWild: null // card waiting for a color choice (human)
+    pendingWild: null, // card waiting for a color choice (human)
+    unoCalled: {},     // per-player: true if UNO was called after reaching 1 card
+    unoTimer: null     // timer ID for human UNO call window
   };
 
   // ---------- Setup ----------
@@ -37,8 +39,15 @@
     const botPlan = [
       { key: "blaze", style: "aggressive" },
       { key: "sage",  style: "strategic" },
-      { key: "lucky", style: "unpredictable" }
+      { key: "lucky", style: "unpredictable" },
+      { key: "shadow", style: "sneaky" },
+      { key: "phoenix", style: "comeback" }
     ];
+    // Shuffle and pick the first BOT_COUNT.
+    for (let i = botPlan.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [botPlan[i], botPlan[j]] = [botPlan[j], botPlan[i]];
+    }
     for (let i = 0; i < BOT_COUNT; i++) {
       const p = botPlan[i];
       const persona = B.BOT_PERSONALITIES[p.key];
@@ -69,6 +78,8 @@
     G.direction = 1;
     G.gameOver = false;
     G.pendingWild = null;
+    G.unoCalled = {};
+    if (G.unoTimer) { clearTimeout(G.unoTimer); G.unoTimer = null; }
 
     bindControls();
     renderAll();
@@ -142,6 +153,7 @@
     }
 
     checkOneCard();
+    checkUnoTrigger(playerIdx);
     renderAll();
     afterAction();
   }
@@ -161,6 +173,58 @@
         Sound.play("onecard");
       }
     });
+  }
+
+  // ---------- UNO call rule ----------
+  function checkUnoTrigger(playerIdx) {
+    const p = G.players[playerIdx];
+    if (p.hand.length !== 1) return;
+    if (p.isBot) {
+      // Bots auto-call UNO instantly.
+      G.unoCalled[p.idx] = true;
+      showToast(p.icon + " " + p.name.toUpperCase() + " CALLS UNO!");
+      Sound.play("uno");
+    } else {
+      // Human: show UNO button, start 5-second timer.
+      document.getElementById("unoBtn").style.display = "inline-block";
+      if (G.unoTimer) clearTimeout(G.unoTimer);
+      G.unoTimer = setTimeout(() => {
+        if (G.gameOver) return;
+        // Penalty: human didn't call UNO in time.
+        if (!G.unoCalled[p.idx] && p.hand.length === 1) {
+          giveCards(p.idx, 2);
+          Sound.play("draw");
+          showToast("⏰ UNO penalty! Draw 2 cards.");
+          G.unoCalled[p.idx] = false;
+          document.getElementById("unoBtn").style.display = "none";
+          renderAll();
+        }
+      }, 5000);
+    }
+  }
+
+  function onUnoCall() {
+    if (G.gameOver || G.turn !== 0) return;
+    const p = G.players[0];
+    if (p.hand.length <= 1) {
+      G.unoCalled[0] = true;
+      document.getElementById("unoBtn").style.display = "none";
+      if (G.unoTimer) { clearTimeout(G.unoTimer); G.unoTimer = null; }
+      Sound.play("uno");
+      showToast("🎉 YOU CALLED UNO!");
+    }
+  }
+
+  function renderUnoBtn() {
+    const btn = document.getElementById("unoBtn");
+    if (!btn) return;
+    const myTurn = (G.turn === 0 && !G.gameOver);
+    const oneCard = G.players[0].hand.length === 1;
+    if (oneCard && myTurn && !G.unoCalled[0]) {
+      btn.style.display = "inline-block";
+    } else {
+      btn.style.display = "none";
+    }
   }
 
   // ---------- After an action, continue the game ----------
@@ -320,6 +384,7 @@
     renderHand();
     renderBanner();
     renderDrawBtn();
+    renderUnoBtn();
   }
 
   function renderBanner() {
@@ -407,6 +472,7 @@
   // ---------- Controls / buttons ----------
   function bindControls() {
     document.getElementById("drawBtn").addEventListener("click", onDrawClick);
+    document.getElementById("unoBtn").addEventListener("click", onUnoCall);
     document.getElementById("drawPile").addEventListener("click", () => {
       if (G.turn === 0 && !G.gameOver) onDrawClick();
     });

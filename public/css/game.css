@@ -356,6 +356,21 @@ html, body {
   color: #06281a;
   box-shadow: 0 4px 0 #1c7a3c;
 }
+/* UNO call button */
+.uno-btn {
+  margin-top: 8px; margin-left: 12px;
+  padding: 10px 20px; border-radius: 10px; border: none;
+  font-size: 18px; font-weight: 900; cursor: pointer; letter-spacing: 1px;
+  background: linear-gradient(180deg, #ff5b5b, #cc2020);
+  color: #fff; box-shadow: 0 4px 0 #8a1010;
+  animation: unoPulse 0.8s ease infinite;
+  transition: transform .1s;
+}
+.uno-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #8a1010; }
+@keyframes unoPulse {
+  0%,100% { box-shadow: 0 4px 0 #8a1010, 0 0 12px rgba(255,91,91,0.5); }
+  50% { box-shadow: 0 4px 0 #8a1010, 0 0 28px rgba(255,91,91,0.9); }
+}
 
 /* ===================== COLOR PICKER ===================== */
 .overlay {

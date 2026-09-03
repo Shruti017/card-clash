@@ -46,6 +46,7 @@
 }
 .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(0,0,0,0.35); }
 .bot-btn { background: linear-gradient(180deg,#ffe07a,#f2b705); }
+.quick-btn { background: linear-gradient(180deg,#a67cff,#7b4ddb); color: #fff; }
 .net-btn { background: linear-gradient(180deg,#7fd6ff,#2f9be2); }
 .big-ico { font-size: 24px; }
 

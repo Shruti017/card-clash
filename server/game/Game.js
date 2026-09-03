@@ -19,6 +19,8 @@ class Game {
     this.gameOver = false;
     this.winnerId = null;
     this.scores = {};
+    this.unoCalled = {};      // playerId -> true if UNO was called
+    this.unoTimers = {};      // playerId -> timeout reference (for bots)
   }
 
   addPlayer(player) {
@@ -188,6 +190,41 @@ class Game {
         hand: p.id === forPlayerId ? p.hand : undefined
       }))
     };
+  }
+
+  // ---- UNO call rule (server-authoritative) ----
+  callUno(playerId) {
+    const idx = this.playerIndex(playerId);
+    if (idx === -1) return { ok: false, error: "Not a player" };
+    const p = this.players[idx];
+    if (p.hand.length <= 1) {
+      this.unoCalled[playerId] = true;
+      if (this.unoTimers[playerId]) { clearTimeout(this.unoTimers[playerId]); delete this.unoTimers[playerId]; }
+      return { ok: true };
+    }
+    return { ok: false, error: "Not eligible" };
+  }
+
+  // Called after every turn change. Checks if the current player needs to
+  // call UNO (has 1 card). Bots auto-call instantly; humans get a 5s window.
+  checkUno() {
+    const p = this.players[this.turn];
+    if (!p || p.hand.length !== 1) return null;
+    if (this.unoCalled[p.id]) return null; // already called
+    if (p.isBot) {
+      this.unoCalled[p.id] = true;
+      return { botCalled: p.name };
+    }
+    // Human: set a 5-second timer.
+    if (this.unoTimers[p.id]) clearTimeout(this.unoTimers[p.id]);
+    this.unoTimers[p.id] = setTimeout(() => {
+      if (this.gameOver) return;
+      if (!this.unoCalled[p.id] && p.hand.length === 1) {
+        this.giveCards(this.playerIndex(p.id), 2);
+        this.unoTimers[p.id] = null;
+      }
+    }, 5000);
+    return { needsCall: p.id, name: p.name };
   }
 }
 

@@ -30,6 +30,12 @@
       Sound.play("draw");
       socket.emit("drawCard", {});
     });
+    document.getElementById("mpUnoBtn").addEventListener("click", () => {
+      socket.emit("callUno", {});
+      document.getElementById("mpUnoBtn").style.display = "none";
+      Sound.play("uno");
+      showToast("🎉 YOU CALLED UNO!");
+    });
     document.getElementById("mpDrawPile").addEventListener("click", () => {
       if (isMyTurn()) socket.emit("drawCard", {});
     });
@@ -132,6 +138,14 @@
     const db = document.getElementById("mpDrawBtn");
     db.disabled = !myTurn; db.classList.toggle("disabled", !myTurn);
 
+    // UNO button
+    const unoBtn = document.getElementById("mpUnoBtn");
+    if (local.hand && local.hand.length <= 1 && myTurn) {
+      unoBtn.style.display = "inline-block";
+    } else {
+      unoBtn.style.display = "none";
+    }
+
     // Win
     if (state.gameOver) showWin(state, local);
   }
@@ -163,6 +177,19 @@
 
   socket.on("gameState", (state) => {
     if (document.getElementById("mpView").style.display !== "none") render(state);
+  });
+
+  socket.on("unoCalled", (data) => {
+    showToast(data.name.toUpperCase() + " CALLS UNO!");
+    Sound.play("uno");
+  });
+
+  socket.on("unoChallenge", (data) => {
+    if (data.playerId === myPid) {
+      showToast("⏰ CALL UNO! You have 5 seconds!");
+    } else {
+      showToast(data.name + " needs to call UNO!");
+    }
   });
 
   window.CCGame = { start, render };

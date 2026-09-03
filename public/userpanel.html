@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Card Clash - User Panel</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body class="panel-body">
+  <div class="panel-bg"></div>
+  <div class="panel-topbar">
+    <span class="logo">CARD CLASH · PROFILE</span>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="userpanel.html" class="active">My Profile</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="history.html">History</a>
+    </nav>
+  </div>
+
+  <div class="panel-content">
+    <!-- Username entry -->
+    <div id="entryView" class="login-box">
+      <h2>Your Profile</h2>
+      <p style="opacity:0.7;font-size:13px;margin-bottom:12px">Enter your username to view stats, history, and insights.</p>
+      <input id="userInput" placeholder="Username" maxlength="16" />
+      <div><button class="btn" id="loadBtn">VIEW PROFILE</button></div>
+    </div>
+
+    <!-- Profile view (hidden until loaded) -->
+    <div id="profileView" style="display:none">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px">
+        <div id="pAvatar" style="font-size:42px">🙂</div>
+        <div>
+          <h2 id="pName" style="color:#ffe07a;margin:0">Player</h2>
+          <p id="pJoined" style="font-size:12px;opacity:0.5;margin:0"></p>
+        </div>
+        <button class="btn secondary" style="margin-left:auto" id="changeUser">Switch User</button>
+      </div>
+
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="stats">Stats</button>
+        <button class="tab-btn" data-tab="history">History</button>
+        <button class="tab-btn" data-tab="insights">Insights</button>
+      </div>
+
+      <!-- Stats tab -->
+      <div class="tab-content active" id="tab-stats">
+        <div class="stat-grid">
+          <div class="stat-item"><div class="sv" id="sPlayed">0</div><div class="sl">Games Played</div></div>
+          <div class="stat-item"><div class="sv" id="sWon">0</div><div class="sl">Wins</div></div>
+          <div class="stat-item"><div class="sv" id="sLost">0</div><div class="sl">Losses</div></div>
+          <div class="stat-item"><div class="sv" id="sWR">0%</div><div class="sl">Win Rate</div></div>
+          <div class="stat-item"><div class="sv" id="sBest">0</div><div class="sl">Best Score</div></div>
+          <div class="stat-item"><div class="sv" id="sStreak">0</div><div class="sl">Win Streak</div></div>
+          <div class="stat-item"><div class="sv" id="sTotal">0</div><div class="sl">Total Score</div></div>
+        </div>
+      </div>
+
+      <!-- History tab -->
+      <div class="tab-content" id="tab-history">
+        <table class="data-table">
+          <thead><tr><th>Date</th><th>Winner</th><th>Players</th><th>Mode</th></tr></thead>
+          <tbody id="pHistTable"></tbody>
+        </table>
+        <p id="noPHist" style="opacity:0.5;text-align:center;margin-top:16px;display:none">No games yet.</p>
+      </div>
+
+      <!-- Insights tab -->
+      <div class="tab-content" id="tab-insights">
+        <div class="advice-card">
+          <h4>💡 Game Insight</h4>
+          <p id="pAdvice">Play more games to unlock personalized tips!</p>
+        </div>
+        <div class="advice-card" style="margin-top:12px">
+          <h4>📊 Performance</h4>
+          <p id="pPerf"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/userpanel.js"></script>
+</body>
+</html>

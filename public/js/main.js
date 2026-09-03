@@ -18,6 +18,7 @@
 
   openBot.addEventListener("click", () => { beep(); show(botPanel); });
   openNet.addEventListener("click", () => { beep(); show(netPanel); });
+  document.getElementById("quickPlay").addEventListener("click", () => { beep(); location.href = "game.html?bots=2&diff=normal"; });
   document.getElementById("botCancel").addEventListener("click", () => { beep(); show(null); });
   document.getElementById("netCancel").addEventListener("click", () => { beep(); show(null); });
 

@@ -19,9 +19,11 @@ function dbConnected() {
 
 function botPersonalities() {
   return [
-    { name: "Blaze", personalityStyle: "aggressive", difficulty: "normal" },
-    { name: "Sage",  personalityStyle: "strategic",  difficulty: "normal" },
-    { name: "Lucky", personalityStyle: "unpredictable", difficulty: "normal" }
+    { name: "Blaze",   personalityStyle: "aggressive",    difficulty: "normal" },
+    { name: "Sage",    personalityStyle: "strategic",     difficulty: "normal" },
+    { name: "Lucky",   personalityStyle: "unpredictable", difficulty: "normal" },
+    { name: "Shadow",  personalityStyle: "sneaky",        difficulty: "normal" },
+    { name: "Phoenix", personalityStyle: "comeback",      difficulty: "normal" }
   ];
 }
 
@@ -148,6 +150,9 @@ module.exports = function (io) {
       }
       emitState(io, room);
       if (room.game.gameOver) { recordHistory(room.game, "multiplayer"); return; }
+      const unoInfo = room.game.checkUno();
+      if (unoInfo && unoInfo.botCalled) io.to(myRoomId).emit("unoCalled", { name: unoInfo.botCalled });
+      if (unoInfo && unoInfo.needsCall) io.to(myRoomId).emit("unoChallenge", { playerId: unoInfo.needsCall, name: unoInfo.name });
       scheduleBots(io, myRoomId);
     });
 
@@ -162,6 +167,9 @@ module.exports = function (io) {
       if (!res.ok) { socket.emit("errorMsg", res.error); return; }
       emitState(io, room);
       if (room.game.gameOver) { recordHistory(room.game, "multiplayer"); return; }
+      const unoInfo2 = room.game.checkUno();
+      if (unoInfo2 && unoInfo2.botCalled) io.to(myRoomId).emit("unoCalled", { name: unoInfo2.botCalled });
+      if (unoInfo2 && unoInfo2.needsCall) io.to(myRoomId).emit("unoChallenge", { playerId: unoInfo2.needsCall, name: unoInfo2.name });
       scheduleBots(io, myRoomId);
     });
 
@@ -172,7 +180,18 @@ module.exports = function (io) {
       const res = room.game.drawCard(pid);
       if (!res.ok) { socket.emit("errorMsg", res.error); return; }
       emitState(io, room);
+      const unoInfo3 = room.game.checkUno();
+      if (unoInfo3 && unoInfo3.botCalled) io.to(myRoomId).emit("unoCalled", { name: unoInfo3.botCalled });
+      if (unoInfo3 && unoInfo3.needsCall) io.to(myRoomId).emit("unoChallenge", { playerId: unoInfo3.needsCall, name: unoInfo3.name });
       scheduleBots(io, myRoomId);
+    });
+
+    socket.on("callUno", () => {
+      const room = rooms.get(myRoomId);
+      if (!room) return;
+      const pid = room.sockets.get(socket.id);
+      const res = room.game.callUno(pid);
+      if (res.ok) io.to(myRoomId).emit("unoCalled", { name: room.game.players.find(p => p.id === pid)?.name || "?" });
     });
 
     socket.on("restartGame", () => {
